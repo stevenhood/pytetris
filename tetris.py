@@ -1,28 +1,28 @@
-#!/usr/bin/env python
+#! /usr/bin/env python
 
+# pytetris
 # author	Steven Hood
-# date		27/07/2014
 
 # Python 2.7.3
 # Pygame 1.9.1 (release)
 
-import pygame, random
+import pygame, random, sys
 from pygame.sprite import Sprite
 
 pygame.init()
 random.seed()
 
-WINDOW_DIMENSIONS = WINDOW_WIDTH, WINDOW_HEIGHT = 640, 480
+SQUARE_DIMENSIONS = SQUARE_WIDTH, SQUARE_HEIGHT = 30, 30
+WINDOW_DIMENSIONS = WINDOW_WIDTH, WINDOW_HEIGHT = SQUARE_WIDTH * 10, SQUARE_HEIGHT * 20
 
 
-class Ball(Sprite):
+class Square(Sprite):
+	""" Represents an individual square in a tetromino. """
 	def __init__(self, color, position):
 		Sprite.__init__(self)
-
-		# create surface, draw filled circle
-		self.image = pygame.Surface([6, 6])
-		pygame.draw.circle(self.image, pygame.Color(color), (3, 3), 3)
-
+		# create surface
+		self.image = pygame.Surface(SQUARE_DIMENSIONS)
+		self.image.fill(pygame.Color(color))
 		# get sprite bounding box, set initial position
 		self.rect = self.image.get_rect()
 		self.rect.center = position
@@ -38,17 +38,22 @@ def main():
 	background = pygame.Surface(WINDOW_DIMENSIONS)
 	background.fill(pygame.Color("black"))
 	screen.blit(background, (0, 0))
-	pygame.display.set_caption("WINDOW TITLE")
+	pygame.display.set_caption("pytetris")
 	clock = pygame.time.Clock()
 
-	ball = Ball("white", (160, 120))
+	def end(): sys.exit(0)
+	key_map = {
+		pygame.K_ESCAPE: end
+	}
+
+	square = Square("red", (160, 120))
 	# list of sprites to render
-	sprites = pygame.sprite.RenderClear([ball])
+	sprites = pygame.sprite.RenderClear([square])
 	running = True
 
 	while running:
 		clock.tick(30)
-		pygame.display.set_caption("WINDOW TITLE - {0:.2f} fps".format(clock.get_fps()))
+		pygame.display.set_caption("pytetris :: {0:.2f} fps".format(clock.get_fps()))
 
 		# animate and draw sprites, display screen
 		sprites.update()
@@ -61,6 +66,8 @@ def main():
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				running = False
+			elif event.type == pygame.KEYDOWN and event.key in key_map:
+				key_map[event.key]()
 
 
 if __name__ == "__main__":
