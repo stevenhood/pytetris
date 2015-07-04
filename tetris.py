@@ -6,7 +6,9 @@
 # Python 2.7.3
 # Pygame 1.9.1 (release)
 
-import pygame, random, sys
+import sys # exit
+import random
+import pygame
 from pygame.sprite import Sprite
 
 pygame.init()
@@ -20,40 +22,37 @@ class Square(Sprite):
 	""" Represents an individual square in a tetromino. """
 	def __init__(self, color, position):
 		Sprite.__init__(self)
-		# create surface
 		self.image = pygame.Surface(SQUARE_DIMENSIONS)
 		self.image.fill(pygame.Color(color))
 		# get sprite bounding box, set initial position
 		self.rect = self.image.get_rect()
 		self.rect.center = position
 
-	def update(self):
-		x = random.randint(-3, 3)
-		y = random.randint(-3, 3)
+	def move(self, x, y):
 		self.rect.move_ip(x, y)
 
 
 def main():
 	screen = pygame.display.set_mode(WINDOW_DIMENSIONS)
+	pygame.display.set_caption('pytetris')
 	background = pygame.Surface(WINDOW_DIMENSIONS)
-	background.fill(pygame.Color("black"))
+	background.fill(pygame.Color('black'))
 	screen.blit(background, (0, 0))
-	pygame.display.set_caption("pytetris")
-	clock = pygame.time.Clock()
 
 	def end(): sys.exit(0)
 	key_map = {
 		pygame.K_ESCAPE: end
 	}
+	pygame.key.set_repeat(1, 50)
 
-	square = Square("red", (160, 120))
-	# list of sprites to render
+	clock = pygame.time.Clock()
+	square = Square('red', (160, 120))
 	sprites = pygame.sprite.RenderClear([square])
 	running = True
 
 	while running:
 		clock.tick(30)
-		pygame.display.set_caption("pytetris :: {0:.2f} fps".format(clock.get_fps()))
+		pygame.display.set_caption('pytetris :: {0:.2f} fps'.format(clock.get_fps()))
 
 		# animate and draw sprites, display screen
 		sprites.update()
@@ -70,5 +69,5 @@ def main():
 				key_map[event.key]()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 	main()
