@@ -17,10 +17,9 @@ random.seed()
 SQUARE_DIMENSIONS = SQUARE_WIDTH, SQUARE_HEIGHT = 30, 30
 WINDOW_DIMENSIONS = WINDOW_WIDTH, WINDOW_HEIGHT = SQUARE_WIDTH * 10, SQUARE_HEIGHT * 20
 
-
 class Square(Sprite):
-	""" Represents an individual square in a tetromino. """
-	def __init__(self, color, position):
+	"""Represents an individual square in a tetrimino."""
+	def __init__(self, position, color):
 		Sprite.__init__(self)
 		self.image = pygame.Surface(SQUARE_DIMENSIONS)
 		self.image.fill(pygame.Color(color))
@@ -31,6 +30,13 @@ class Square(Sprite):
 	def move(self, x, y):
 		self.rect.move_ip(x, y)
 
+class Tetrimino(object):
+
+	I = []
+
+	"""Represents a four square Tetrimino"""
+	def __init__(self, position, colour):
+		self.squares = pygame.sprite.Group()
 
 def main():
 	screen = pygame.display.set_mode(WINDOW_DIMENSIONS)
@@ -39,14 +45,17 @@ def main():
 	background.fill(pygame.Color('black'))
 	screen.blit(background, (0, 0))
 
-	def end(): sys.exit(0)
+	def end():
+		pygame.quit()
+		sys.exit(0)
+
 	key_map = {
 		pygame.K_ESCAPE: end
 	}
 	pygame.key.set_repeat(1, 50)
 
 	clock = pygame.time.Clock()
-	square = Square('red', (160, 120))
+	square = Square((160, 120), 'red')
 	sprites = pygame.sprite.RenderClear([square])
 	running = True
 
